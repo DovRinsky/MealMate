@@ -10,7 +10,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         RecyclerView rv = findViewById(R.id.rv);
         rv.setHasFixedSize(false);
 
@@ -31,5 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         MealsAdapter adapter = new MealsAdapter();
         rv.setAdapter(adapter);
+
     }
 }
