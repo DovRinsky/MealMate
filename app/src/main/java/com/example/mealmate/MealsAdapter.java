@@ -25,13 +25,39 @@ public class MealsAdapter extends RecyclerView.Adapter<MealViewHolder> {
 
     public MealsAdapter() {
         meals = new ArrayList<>();
-        meals.add(new Meal("Chicken Taco", R.drawable.meal7,"Grilled chicken tacos loaded with fresh lettuce, tomatoes, red onions, cilantro, and crunchy nuts in soft tortillas. (434 Cal)"));
-        meals.add(new Meal("Stir-Fry Noodles",R.drawable.meal2,"Tender chicken, and crisp vegetables, tossed in a savory sauce and garnished with fresh herbs. (380 Cal)"));
-        meals.add(new Meal("Tomato Spaghetti",R.drawable.meal3,"A classic spaghetti dish with rich tomato sauce, garnished with fresh herbs and peppercorns. (300 Cal)"));
-        meals.add(new Meal("Fresh Caesar Salad",R.drawable.meal4,"A fresh Caesar salad with crispy bacon, cherry tomatoes, parmesan shavings, and a drizzle of balsamic glaze. (350 Cal)"));
-        meals.add(new Meal("Truffle Rigatoni Pasta",R.drawable.meal5,"A creamy truffle rigatoni pasta, garnished with fresh parsley for a rich and aromatic flavor. (234 Cal)"));
-        meals.add(new Meal("Veggie Bruschetta",R.drawable.meal6,"A crisp bruschetta topped with cherry tomatoes, yellow peppers, fresh herbs, and a drizzle of olive oil. (180 Cal)"));
+        db.collection("Meals").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    meals.clear();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String name = document.getString("Name");
+                        String description = document.getString("Description");
+                        String avatarName = document.getString("Avatar");
+                        int avatarResId = getAvatarResId(avatarName);
+                        meals.add(new Meal(name, avatarResId, description));
+                    }
+                    notifyDataSetChanged();
+                } else {
+                    // Handle error
+                }
+            }
+        });
+    }
 
+    // Helper method to map avatar string to drawable resource
+    private int getAvatarResId(String avatarName) {
+        switch (avatarName) {
+            case "meal1": return R.drawable.meal1;
+            case "meal2": return R.drawable.meal2;
+            case "meal3": return R.drawable.meal3;
+            case "meal4": return R.drawable.meal4;
+            case "meal5": return R.drawable.meal5;
+            case "meal6": return R.drawable.meal6;
+            case "meal7": return R.drawable.meal7;
+            case "mymeal": return R.drawable.mymeal;
+            default: return R.drawable.meal1; // fallback
+        }
 
     }
 
